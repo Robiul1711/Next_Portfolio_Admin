@@ -5,6 +5,8 @@ import ForgotPassword from "@/pages/AuthPages/ForgotPassword";
 import Login from "@/pages/AuthPages/Login";
 import ResetPassword from "@/pages/AuthPages/ResetPassword";
 import Signup from "@/pages/AuthPages/Signup";
+import AddProjects from "@/pages/ProjectPage/AddProjects";
+import AllProject from "@/pages/ProjectPage/AllProject";
 
 
 import { createBrowserRouter } from "react-router-dom";
@@ -14,12 +16,12 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
+      // {
+      //   path: "/",
+      //   element: <Signup />,
+      // },
       {
         path: "/",
-        element: <Signup />,
-      },
-      {
-        path: "/login",
         element: <Login />,
       },
       {
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />, // ✅ Fixed typo
+      },
+      {
+        path: "/dashboard/all-project",
+        element: <AllProject />, // ✅ Fixed typo
+      },
+      {
+        path: "/dashboard/add-project",
+        element: <AddProjects />, // ✅ Fixed typo
       },
     ],
   },

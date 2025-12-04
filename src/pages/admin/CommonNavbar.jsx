@@ -13,19 +13,19 @@ const CommonNavbar = ({ open, setOpen }) => {
           onClick={() => setOpen(!open)}
           className="xlg:hidden block cursor-pointer"
         >
-          <GiHamburgerMenu color="black" size={26} />
+          <GiHamburgerMenu color="" size={26} />
         </span>
         <div className="flex items-center gap-4">
-          <p className=" text-black text-3xl font-bold">Admin Header</p>
+          <p className="  text-3xl font-bold">Admin Header</p>
         </div>
       </div>
 
       <div className="flex items-start md:gap-4 gap-2">
         <span>
-          <IoIosNotifications color="black" size={24} />
+          <IoIosNotifications color="" size={24} />
         </span>
         <span>
-          <CgProfile color="black" size={24} />
+          <CgProfile color="" size={24} />
         </span>
       </div>
     </div>

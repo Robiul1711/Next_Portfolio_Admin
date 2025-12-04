@@ -21,18 +21,18 @@ const AdminLayout = () => {
     {
       id:2,
       icon:<MdDashboard />,
-      text:"Admin Management",
-      path:"/dashboard/admin-list",
+      text:"Projects Management",
+      path:"/dashboard/all-project",
       sublink:[
         {
           id:1,
-          text:"Admin List",
-          path:"/dashboard/admin-list",
+          text:"All Prjects",
+          path:"/dashboard/all-project",
         },
         {
           id:1,
-          text:"Add New Admin",
-          path:"/dashboard/asdasd"
+          text:"Add New Project",
+          path:"/dashboard/add-project",
         },
       ]
     },
@@ -49,8 +49,8 @@ const AdminLayout = () => {
       <ScrollRestoration />
       <div className="flex  h-screen min-h-screen w-full">
         <SideBar open={Open} setOpen={setOpen} sidebar={sideBar} />
-        <div className="flex-1 bg-dark text-white flex flex-col overflow-auto custom-scrollbar">
-          <div className=" flex flex-col lg:gap-10 gap-5 lg:py-6 py-3 lg:px-[30px] px-2.5 sm:px-5">
+        <div className="flex-1  bg-gradient-to-br from-gray-900 to-black text-white flex flex-col overflow-auto custom-scrollbar">
+          <div className=" flex flex-col px-4">
             <CommonNavbar open={Open} setOpen={setOpen} />
             <Outlet />
           </div>

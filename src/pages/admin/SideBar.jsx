@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
-import { FaReact } from "react-icons/fa6";
+import logo from "../../assets/images/logo3.svg";
+
 const SideBar = ({ sidebar, open, setOpen }) => {
   const location = useLocation();
   const [activeParentIndex, setActiveParentIndex] = useState(null);
@@ -39,7 +40,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+        className={`fixed inset-0 bg-gradient-to-br from-gray-900 to-black transition-all duration-300 ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         } xl:hidden z-50`}
         onClick={() => setOpen(false)}
@@ -49,18 +50,16 @@ const SideBar = ({ sidebar, open, setOpen }) => {
       <div
         className={`h-full py-6 ${
           open
-            ? "left-0 top-0 w-[320px] z-[220] shadow-lg bg-[#1F3C37] overflow-y-auto"
-            : "-left-full xl:w-[350px] w-[320px]"
+            ? "left-0 top-0 w-[320px] z-[220]"
+            : "-left-full xl:left-0 xl:w-[350px] w-[320px]"
         }
-        bg-[#ddd] backdrop-blur-md lg:px-8 px-4 flex flex-col gap-8 shadow-md xlg:static fixed transition-all duration-300`}
+        bg-gradient-to-br from-gray-900 to-black border-r border-gray-700 text-white backdrop-blur-md lg:px-8 px-4 flex flex-col gap-8 
+        shadow-xl fixed xl:static transition-all duration-300`}
       >
         {/* Logo */}
         <Link to={"/dashboard"}>
-          <div className="flex justify-center items-center">
-            {/* <img src={} alt="Safe" className="h-24 object-contain" /> */}
-            <span>
-              <FaReact size={40} color=" black" />
-            </span>
+          <div className="flex justify-center items-center mb-6">
+            <img src={logo} alt="" className="w-32 md:w-44" />
           </div>
         </Link>
 
@@ -68,7 +67,9 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         <div className="flex flex-col gap-3">
           {sidebar?.map((item, index) => {
             const parentActive = isParentActive(item);
+
             return !item?.sublink ? (
+              // --- Single Link ---
               <Link
                 key={index}
                 to={item?.path}
@@ -76,30 +77,33 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                   setActiveParentIndex(null);
                   setOpen(false);
                 }}
-                className={`flex items-center gap-3 px-4 py-2 rounded-lg text-base font-medium transition-colors duration-200 ${
+                className={`flex items-center gap-3 px-4 py-2 rounded-lg text-base font-medium
+                transition-colors duration-200 ${
                   isActive(item?.activePaths)
-                    ? "bg-[#FFF] text-[#3F6534]"
-                    : "text-[#FFF] hover:bg-[#466b55] hover:text-[#ffffff]"
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-300 hover:bg-[#1E1E1E] hover:text-white"
                 }`}
               >
-                <span className="text-lg">{item?.icon}</span>
+                <span className="text-lg text-white">{item?.icon}</span>
                 {item?.text}
               </Link>
             ) : (
+              // --- Dropdown Parent ---
               <div className="relative" key={index}>
-                {/* Parent link */}
                 <div
-                  className={`flex items-center justify-between px-4 py-2 cursor-pointer w-full rounded-lg transition-all duration-200 ${
+                  className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-lg 
+                  transition-colors duration-200 ${
                     parentActive
-                      ? "bg-[#253E8E] text-white"
-                      : "text-gray-700 hover:bg-[#E3ECFF] hover:text-[#253E8E]"
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-300 hover:bg-[#1E1E1E] hover:text-white"
                   }`}
                   onClick={() => toggleSubmenu(index)}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-lg">{item?.icon}</span>
+                    <span className="text-lg text-white">{item?.icon}</span>
                     <p className="font-medium">{item?.text}</p>
                   </div>
+
                   <span
                     className={`transform transition-transform duration-300 ${
                       activeParentIndex === index ? "rotate-180" : "rotate-0"
@@ -109,12 +113,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                   </span>
                 </div>
 
-                {/* Sublinks dropdown */}
+                {/* Sublinks */}
                 <div
-                  className={`transition-all duration-300 ease-in-out overflow-hidden px-4 bg-white rounded-lg ${
+                  className={`transition-all duration-300 overflow-hidden px-3 rounded-lg bg-[#1A1A1A] ${
                     activeParentIndex === index
-                      ? "max-h-[500px] py-4 opacity-100 translate-y-0"
-                      : "max-h-0 opacity-0 -translate-y-2"
+                      ? "max-h-[500px] py-3 opacity-100"
+                      : "max-h-0 opacity-0"
                   }`}
                 >
                   <div className="flex flex-col gap-1">
@@ -122,12 +126,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                       <Link
                         key={subIndex}
                         to={value?.path}
-                        className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
-                          isActive(item?.activePaths)
-                            ? "text-black font-medium bg-[#F0F4FF]"
-                            : "text-[#5A5C5F] font-normal hover:bg-[#F0F4FF]"
-                        }`}
                         onClick={() => setOpen(false)}
+                        className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
+                          location.pathname === value.path
+                            ? "bg-blue-500 text-white"
+                            : "text-gray-400 hover:bg-[#2A2A2A] hover:text-white"
+                        }`}
                       >
                         {value?.text}
                       </Link>
@@ -139,11 +143,10 @@ const SideBar = ({ sidebar, open, setOpen }) => {
           })}
 
           {/* Logout */}
-          <div className="flex absolute bottom-6 w-[80%] items-center gap-3  cursor-pointer  transition  rounded-lg px-4 py-2">
-            <span>
-              <IoLogOutOutline color="black" />
-            </span>
-            <p className="font-medium ">Log Out</p>
+          <div className="absolute bottom-6 w-[80%] flex items-center gap-3 px-4 py-2 cursor-pointer rounded-lg 
+            bg-[#1E1E1E] text-gray-300 hover:bg-red-600 hover:text-white transition-all">
+            <IoLogOutOutline size={22} />
+            <p className="font-medium">Log Out</p>
           </div>
         </div>
       </div>
