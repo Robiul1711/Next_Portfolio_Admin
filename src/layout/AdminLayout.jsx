@@ -4,7 +4,7 @@ import SideBar from "@/pages/admin/SideBar";
 import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
+import { RiContactsFill } from "react-icons/ri";
 const AdminLayout = () => {
   const [Open, setOpen] = useState(false);
 
@@ -36,6 +36,26 @@ const AdminLayout = () => {
         },
       ]
     },
+    {
+      id:3,
+      icon:<RiContactsFill />,
+      text:"Contact Management",
+      path:"/dashboard/all-contact",
+      sublink:[
+        {
+          id:1,
+          text:"All Contacts",
+          path:"/dashboard/all-contacts",
+        },
+        {
+          id:2,
+          text:"Contact Form CMS",
+          path:"/dashboard/contact-cms",
+        },
+ 
+      ]
+    },
+
   ];
   const location = useLocation();
   useEffect(() => {

@@ -5,6 +5,8 @@ import ForgotPassword from "@/pages/AuthPages/ForgotPassword";
 import Login from "@/pages/AuthPages/Login";
 import ResetPassword from "@/pages/AuthPages/ResetPassword";
 import Signup from "@/pages/AuthPages/Signup";
+import AllContacts from "@/pages/ContactList/AllContacts";
+import ContactCMS from "@/pages/ContactList/ContactCMS";
 import AddProjects from "@/pages/ProjectPage/AddProjects";
 import AllProject from "@/pages/ProjectPage/AllProject";
 
@@ -42,15 +44,23 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard",
-        element: <Dashboard />, // ✅ Fixed typo
+        element: <Dashboard />, 
       },
       {
         path: "/dashboard/all-project",
-        element: <AllProject />, // ✅ Fixed typo
+        element: <AllProject />, 
       },
       {
         path: "/dashboard/add-project",
-        element: <AddProjects />, // ✅ Fixed typo
+        element: <AddProjects />, 
+      },
+      {
+        path: "/dashboard/all-contacts",
+        element: <AllContacts />, 
+      },
+      {
+        path: "/dashboard/contact-cms",
+        element: <ContactCMS />, 
       },
     ],
   },
