@@ -7,7 +7,7 @@ const useAxiosSecure = () => {
   const access_token = token;
 
   const axiosSecure = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: import.meta.env.NEXT_PUBLIC_API_URL,
     timeout: 30000,
   });
 
