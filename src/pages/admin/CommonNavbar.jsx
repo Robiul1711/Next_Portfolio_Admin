@@ -16,7 +16,7 @@ const CommonNavbar = ({ open, setOpen }) => {
           <GiHamburgerMenu color="" size={26} />
         </span>
         <div className="flex items-center gap-4">
-          <p className="  text-3xl font-bold">Admin Header</p>
+          <p className="  text-3xl font-bold">Welcome Back Ashiq</p>
         </div>
       </div>
 

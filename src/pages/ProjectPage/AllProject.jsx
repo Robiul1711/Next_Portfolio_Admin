@@ -83,11 +83,19 @@ const AllProject = () => {
                   </span>
                 ))}
               </div>
+              <div className="mt-3 flex items-center justify-between">
+                {/* Stack */}
+                <p className="text-sm text-gray-300 ">
+                  <span className="font-semibold">Stack:</span> {project?.stack}
+                </p>
 
-              {/* Stack */}
-              <p className="text-sm text-gray-300 mt-3">
-                <span className="font-semibold">Stack:</span> {project?.stack}
-              </p>
+                {/* Popular (show only if true) */}
+                {project?.popular && (
+                  <span className="inline-block bg-green-600 px-2 py-1 text-xs rounded-md ml-2">
+                    Popular
+                  </span>
+                )}
+              </div>
 
               {/* Links */}
               <div className="flex items-center gap-4 mt-4">
@@ -112,7 +120,7 @@ const AllProject = () => {
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-3 mt-5">
-               <EditProjectDialog project={project} />
+                <EditProjectDialog project={project} />
 
                 <button
                   className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition"

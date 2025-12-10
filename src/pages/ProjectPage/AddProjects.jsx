@@ -25,35 +25,37 @@ const AddProjects = () => {
   });
 
   // SUBMIT FORM
-const onSubmit = (data) => {
-  const formData = new FormData();
+  const onSubmit = (data) => {
+    const formData = new FormData();
 
-  formData.append("title", data.title);
-  formData.append("description", data.description);
-  formData.append("stack", data.stack);
-  formData.append("github", data.github || "");
-  formData.append("live", data.live || "");
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("stack", data.stack);
+    formData.append("github", data.github || "");
+    formData.append("live", data.live || "");
+    formData.append("popular", data.popular || "");
 
-  // ✔ send as single string (matches Postman)
-  formData.append("technologies", technologies.join(", "));
+    // ✔ send as single string (matches Postman)
+    formData.append("technologies", technologies.join(", "));
 
-  if (data.image instanceof File) {
-    formData.append("image", data.image);
-  }
-
-  mutate({
-    data: formData, // ✔ correct place
-  }, {
-    onSuccess: () => {
-      reset();
-      setPreview(null);
-      setTechnologies([]);
-      setTechInput("");
+    if (data.image instanceof File) {
+      formData.append("image", data.image);
     }
-  });
-};
 
-
+    mutate(
+      {
+        data: formData, // ✔ correct place
+      },
+      {
+        onSuccess: () => {
+          reset();
+          setPreview(null);
+          setTechnologies([]);
+          setTechInput("");
+        },
+      }
+    );
+  };
 
   // Image upload
   const handleImageChange = (e) => {
@@ -187,49 +189,67 @@ const onSubmit = (data) => {
                       ))}
                     </div>
                   </div>
+                  {/* popular  */}
                 </div>
 
                 {/* RIGHT – IMAGE */}
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Project Image
-                  </label>
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      Popular Project
+                    </label>
 
-                  <div className="relative border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-colors">
-                    {preview ? (
-                      <div className="relative w-full">
-                        <img
-                          src={preview}
-                          alt="Preview"
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPreview(null);
-                            setValue("image", null);
-                          }}
-                          className="absolute top-2 right-2 p-2 bg-red-600 rounded-full hover:bg-red-700"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <Upload className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400 mb-2">Click to upload</p>
-                        <p className="text-sm text-gray-500">
-                          PNG, JPG, WEBP up to 5MB
-                        </p>
-                      </>
-                    )}
+                    <select
+                      {...register("popular")}
+                      className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white"
+                    >
+                      <option value="">Select option</option>
+                      <option value="true">Yes (Popular)</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
 
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      Project Image
+                    </label>
+
+                    <div className="relative border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-colors">
+                      {preview ? (
+                        <div className="relative w-full">
+                          <img
+                            src={preview}
+                            alt="Preview"
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreview(null);
+                              setValue("image", null);
+                            }}
+                            className="absolute top-2 right-2 p-2 bg-red-600 rounded-full hover:bg-red-700"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                          <p className="text-gray-400 mb-2">Click to upload</p>
+                          <p className="text-sm text-gray-500">
+                            PNG, JPG, WEBP up to 5MB
+                          </p>
+                        </>
+                      )}
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
