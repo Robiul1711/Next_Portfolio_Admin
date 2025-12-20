@@ -140,11 +140,23 @@ const AddProjects = () => {
                       className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white"
                     >
                       <option value="">Select stack</option>
+                      <option value="">Select stack</option>
                       <option value="MERN">MERN</option>
-                      <option value="Next.js">Next.js</option>
-                      <option value="React Native">React Native</option>
-                      <option value="Vue">Vue.js</option>
+                      <option value="NextJS">NextJS</option>
+                      <option value="React JS">React JS</option>
+                      <option value="NodeJS">NodeJS</option>
+                      <option value="Vue.js">Vue.js</option>
                       <option value="Angular">Angular</option>
+                      <option value="Django">Django (Python)</option>
+                      <option value="Ruby on Rails">
+                        Ruby on Rails (Ruby)
+                      </option>
+                      <option value="Laravel">Laravel (PHP)</option>
+                      <option value="Spring Boot">Spring Boot (Java)</option>
+                      <option value="Flutter">Flutter (Dart)</option>
+                      <option value="React Native">
+                        React Native (JavaScript)
+                      </option>
                     </select>
                   </div>
 
