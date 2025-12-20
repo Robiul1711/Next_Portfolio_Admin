@@ -5,6 +5,8 @@ import ForgotPassword from "@/pages/AuthPages/ForgotPassword";
 import Login from "@/pages/AuthPages/Login";
 import ResetPassword from "@/pages/AuthPages/ResetPassword";
 import Signup from "@/pages/AuthPages/Signup";
+import PostBlogPrompt from "@/pages/Blog/PostBlogPrompt";
+import ShowAllBlog from "@/pages/Blog/ShowAllBlog";
 import AllContacts from "@/pages/ContactList/AllContacts";
 import ContactCMS from "@/pages/ContactList/ContactCMS";
 import AddProjects from "@/pages/ProjectPage/AddProjects";
@@ -61,6 +63,14 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/contact-cms",
         element: <ContactCMS />, 
+      },
+      {
+        path: "/dashboard/add-blogs",
+        element: <PostBlogPrompt />, 
+      },
+      {
+        path: "/dashboard/all-blogs",
+        element: <ShowAllBlog />, 
       },
     ],
   },
