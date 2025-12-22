@@ -1,50 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import { useApiQuery } from '@/hooks/allCMS';
+import { useApiMutation } from '@/hooks/postApi';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const ShowAllBlog = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // 1. Fetch Blogs on Load
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
+    const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const queryClient = useQueryClient();
 
-  const fetchBlogs = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/blogs`);
-      if (!response.ok) throw new Error('Failed to fetch blogs');
-      const data = await response.json();
-      setBlogs(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  // Fetch all allBlogs
+  const { data: allBlogs, isLoading , error: allBlogsError} = useApiQuery({
+    queryKey: "all-blogs",
+    url: "/api/blogs",
+    secure: false,
+  });
+
+    // Generic mutation for all methods
+    const { mutate: apiMutate, isPending: isDeleting } = useApiMutation({
+      secure: false,
+      successMessage: "Blog Deleted Successfully!",
+    });
+    // When user clicks delete
+  const handleDelete = (id) => {
+    setSelectedId(id);
+    setShowModal(true);
   };
 
-  // 2. Handle Delete
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this blog?")) return;
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        // Remove from UI immediately without refreshing
-        setBlogs(blogs.filter((blog) => blog._id !== id));
-      } else {
-        alert("Failed to delete");
+  // Confirm delete request
+  const confirmDelete = () => {
+    apiMutate(
+      { method: "delete", customUrl: `/api/blogs/${selectedId}` },
+      {
+        onSuccess: () => {
+          setShowModal(false);
+          // Refresh updated project list
+          queryClient.invalidateQueries(["all-blogs"]);
+        },
       }
-    } catch (error) {
-      console.error("Error deleting:", error);
-    }
+    );
   };
 
-  if (loading) return <div className="text-center py-10">Loading awesome content...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+  if (isLoading) return <div className="text-center py-10">Loading awesome content...</div>;
+  if (allBlogsError) return <div className="text-center py-10 text-red-500">Error: {allBlogsError}</div>;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -53,7 +51,7 @@ const ShowAllBlog = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {blogs.map((blog) => (
+        {allBlogs?.map((blog) => (
           <div 
             key={blog._id} 
             className="border border-gray-800 text-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col"
@@ -95,7 +93,7 @@ const ShowAllBlog = () => {
                 <div className="flex space-x-2">
                   {/* Delete Button */}
                   <button 
-                    onClick={() => handleDelete(blog._id)}
+                    onClick={() => handleDelete(blog?._id)}
                     className="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors"
                     title="Delete Blog"
                   >
@@ -110,9 +108,37 @@ const ShowAllBlog = () => {
         ))}
       </div>
 
-      {blogs.length === 0 && (
+      {allBlogs.length === 0 && (
         <div className="text-center text-gray-500 mt-10">
           No blogs found. Try generating one!
+        </div>
+      )}
+            {/* DELETE CONFIRMATION MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-xl border border-gray-700 w-full max-w-md text-center">
+            <h2 className="text-xl font-bold text-white">Confirm Delete</h2>
+            <p className="text-gray-400 mt-3">
+              Are you sure you want to delete this blog?
+            </p>
+
+            <div className="flex justify-center gap-4 mt-6">
+              <button
+                className="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
