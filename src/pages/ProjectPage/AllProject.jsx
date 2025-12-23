@@ -59,13 +59,17 @@ const AllProject = () => {
             <img
               src={project?.image}
               alt={project?.title}
-              className="w-full h-40 object-cover"
+              className="w-full h-40 sm:h-48 md:h-52 object-cover"
             />
 
             <div className="p-5">
               <h2 className="text-xl font-semibold">{project?.title}</h2>
 
+<<<<<<< HEAD
               <p className="text-gray-400 line-clamp-3 mt-2">{project?.description}</p>
+=======
+              <p className="text-gray-400 mt-2 line-clamp-2">{project?.description}</p>
+>>>>>>> 1182b2a12c34aedacc2390c6068960135b9c760b
 
               {/* Technologies */}
               <div className="flex flex-wrap gap-2 mt-3">

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
+import { FaBlog } from "react-icons/fa6";
 const AdminLayout = () => {
   const [Open, setOpen] = useState(false);
 
@@ -38,6 +39,25 @@ const AdminLayout = () => {
     },
     {
       id:3,
+      icon:<FaBlog />,
+      text:"Blog Management",
+      path:"/dashboard/all-blog",
+      sublink:[
+        {
+          id:1,
+          text:"All Blogs",
+          path:"/dashboard/all-blogs",
+        },
+        {
+          id:2,
+          text:"Add New Blog",
+          path:"/dashboard/add-blogs",
+        },
+ 
+      ]
+    },
+    {
+      id:4,
       icon:<RiContactsFill />,
       text:"Contact Management",
       path:"/dashboard/all-contact",
