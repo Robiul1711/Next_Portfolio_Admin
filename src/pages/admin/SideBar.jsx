@@ -51,10 +51,10 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         className={`h-full py-6 ${
           open
             ? "left-0 top-0 w-[320px] z-[220]"
-            : "-left-full xl:left-0 xl:w-[350px] w-[320px]"
+            : "-left-full lg:left-0 lg:w-[350px] w-[320px]"
         }
         bg-gradient-to-br from-gray-900 to-black border-r border-gray-700 text-white backdrop-blur-md lg:px-8 px-4 flex flex-col gap-8 
-        shadow-xl fixed xl:static transition-all duration-300`}
+        shadow-xl fixed lg:static transition-all duration-300`}
       >
         {/* Logo */}
         <Link to={"/dashboard"}>
