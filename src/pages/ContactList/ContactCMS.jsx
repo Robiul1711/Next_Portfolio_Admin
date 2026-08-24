@@ -1,6 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import React, { useState, useEffect } from "react";
+import { useApiQuery } from "@/hooks/allCMS";
+import { useApiMutation } from "@/hooks/postApi";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  FiSettings,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiSave,
+  FiCheckCircle,
+  FiHelpCircle,
+} from "react-icons/fi";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
 const ContactCMS = () => {
   const [formData, setFormData] = useState({
@@ -12,172 +23,193 @@ const ContactCMS = () => {
     longitude: "",
   });
 
-  // handle change
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.type === "number" ? Number(e.target.value) : e.target.value,
-    });
-  };
+  const queryClient = useQueryClient();
 
-  // POST mutation
-  const PostContactCMS = useMutation({
-    mutationFn: async (data) => {
-      const response = await fetch("http://localhost:5000/api/contact-info", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit contact info");
-      }
-
-      return response.json();
-    },
-
-    // SUCCESS
-    onSuccess: () => {
-      toast.success("Contact Information Saved Successfully!");
-      setFormData({
-        heading: "",
-        email: "",
-        phone: "",
-        supportEmail: "",
-        latitude: "",
-        longitude: "",
-      });
-    },
-
-    // ERROR
-    onError: () => {
-      toast.error("Failed to save contact info!");
-    },
+  // Fetch current existing contact info
+  const { data: existingInfo, isLoading } = useApiQuery({
+    queryKey: "contact-info",
+    url: "/api/contact-info",
+    secure: true,
   });
 
-  // Submit
+  useEffect(() => {
+    if (existingInfo) {
+      setFormData({
+        heading: existingInfo.heading || "",
+        email: existingInfo.email || "",
+        phone: existingInfo.phone || "",
+        supportEmail: existingInfo.supportEmail || "",
+        latitude: existingInfo.latitude || "",
+        longitude: existingInfo.longitude || "",
+      });
+    }
+  }, [existingInfo]);
+
+  // Mutation to update contact info
+  const { mutate: updateMutation, isPending } = useApiMutation({
+    url: "/api/contact-info",
+    defaultMethod: "put",
+    secure: true,
+    successMessage: "Contact information updated successfully!",
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? (value === "" ? "" : Number(value)) : value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (
-      !formData.heading ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.supportEmail ||
-      !formData.latitude ||
-      !formData.longitude
-    ) {
-      toast.error("All fields are required!");
-      return;
-    }
-
-    PostContactCMS.mutate({
-      ...formData,
-      latitude: Number(formData.latitude),
-      longitude: Number(formData.longitude),
-    });
+    updateMutation(
+      {
+        method: "put",
+        customUrl: "/api/contact-info",
+        data: {
+          ...formData,
+          latitude: Number(formData.latitude) || 0,
+          longitude: Number(formData.longitude) || 0,
+        },
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["contact-info"]);
+        },
+      }
+    );
   };
 
   return (
-    <div className="p-6 max-w-3xl w-full mx-auto">
-      <h1 className="text-2xl font-bold text-white mb-6">Contact CMS Settings</h1>
+    <div className="space-y-6 pb-12 pt-2 max-w-4xl mx-auto">
+      {/* Header Banner */}
+      <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-md">
+        <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+          <MdOutlineAdminPanelSettings className="text-amber-400" />
+          Contact Information CMS
+        </h1>
+        <p className="text-slate-400 text-xs sm:text-sm mt-1">
+          Customize your public contact information, phone numbers, email addresses, and map coordinates displayed on your portfolio website.
+        </p>
+      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-800 p-6 rounded-xl border border-gray-700 space-y-5"
-      >
-        {/* Heading */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">Heading</label>
-          <textarea
-            name="heading"
-            value={formData.heading}
-            onChange={handleChange}
-            rows="3"
-            placeholder="Enter heading..."
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+      {/* Main CMS Form Card */}
+      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-xl">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Main Heading Text */}
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-white">
+              Contact Section Heading / Pitch
+            </label>
+            <textarea
+              name="heading"
+              value={formData.heading}
+              onChange={handleChange}
+              rows="3"
+              placeholder="e.g. Let's discuss your next project or opportunity..."
+              required
+              className="w-full p-4 bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl text-slate-200 placeholder-slate-500 text-sm outline-none transition-all resize-y"
+            />
+          </div>
 
-        {/* Email */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter email..."
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+          {/* Contact Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Primary Email */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-white flex items-center gap-1.5">
+                <FiMail className="text-amber-400" /> Primary Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="your.email@gmail.com"
+                required
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+              />
+            </div>
 
-        {/* Phone */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Enter phone..."
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+            {/* Support / Secondary Email */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-white flex items-center gap-1.5">
+                <FiMail className="text-amber-400" /> Support / Alternative Email
+              </label>
+              <input
+                type="email"
+                name="supportEmail"
+                value={formData.supportEmail}
+                onChange={handleChange}
+                placeholder="support@domain.com"
+                required
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+              />
+            </div>
 
-        {/* Support Email */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">
-            Support Email
-          </label>
-          <input
-            type="email"
-            name="supportEmail"
-            value={formData.supportEmail}
-            onChange={handleChange}
-            placeholder="Enter support email..."
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+            {/* Phone Number */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-white flex items-center gap-1.5">
+                <FiPhone className="text-amber-400" /> Phone Number
+              </label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+880 1XXXXXXXXX"
+                required
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+              />
+            </div>
 
-        {/* Latitude */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">Latitude</label>
-          <input
-            type="number"
-            name="latitude"
-            value={formData.latitude}
-            onChange={handleChange}
-            placeholder="40.7128"
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+            {/* Location Coordinates */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-white flex items-center gap-1">
+                  <FiMapPin className="text-amber-400" /> Latitude
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="latitude"
+                  value={formData.latitude}
+                  onChange={handleChange}
+                  placeholder="23.8103"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+                />
+              </div>
 
-        {/* Longitude */}
-        <div>
-          <label className="block text-gray-300 mb-1 font-semibold">Longitude</label>
-          <input
-            type="number"
-            name="longitude"
-            value={formData.longitude}
-            onChange={handleChange}
-            placeholder="-74.0060"
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-blue-500"
-          />
-        </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-white flex items-center gap-1">
+                  <FiMapPin className="text-amber-400" /> Longitude
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="longitude"
+                  value={formData.longitude}
+                  onChange={handleChange}
+                  placeholder="90.4125"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+          </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={PostContactCMS.isPending}
-          className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition disabled:opacity-50"
-        >
-          {PostContactCMS.isPending ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
+          {/* Submit Button */}
+          <div className="pt-4 border-t border-slate-800">
+            <button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-sm shadow-lg shadow-amber-600/30 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <FiSave className="text-lg" />
+              <span>{isPending ? "Saving Changes..." : "Save Contact Info"}</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
