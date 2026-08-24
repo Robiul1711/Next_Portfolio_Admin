@@ -31,6 +31,20 @@ const Dashboard = () => {
     secure: true,
   });
 
+  const { data: analyticsData } = useApiQuery({
+    queryKey: "analytics-stats",
+    url: "/api/analytics/stats",
+    secure: true,
+  });
+
+  const analytics = analyticsData?.data || {
+    totalViews: 0,
+    totalUnique: 0,
+    totalDesktop: 0,
+    totalMobile: 0,
+    dailyTrend: [],
+  };
+
   const stats = dashboardData?.stats || {
     totalProjects: 0,
     popularProjects: 0,
@@ -217,6 +231,67 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Visitor Traffic & Audience Analytics Card */}
+      <div className="bg-slate-900/50 border border-slate-800/90 rounded-2xl p-6 backdrop-blur-md shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <FiActivity className="text-xl" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white">Live Visitor & Traffic Insights</h2>
+              <p className="text-xs text-slate-400">Real-time audience tracking and device distribution</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 text-xs font-semibold">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300">
+              <span>🖥️ Desktop:</span>
+              <span className="text-cyan-400 font-bold">{analytics.totalDesktop}</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300">
+              <span>📱 Mobile:</span>
+              <span className="text-purple-400 font-bold">{analytics.totalMobile}</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <span>✨ Unique:</span>
+              <span className="font-bold">{analytics.totalUnique}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 7-Day Trend Visualization */}
+        <div className="pt-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-400">7-Day Traffic Trend</span>
+            <span className="text-xs font-bold text-white">{analytics.totalViews} Total Views</span>
+          </div>
+
+          <div className="grid grid-cols-7 gap-2 sm:gap-4 h-28 items-end pt-4">
+            {analytics.dailyTrend.map((day, idx) => {
+              const maxView = Math.max(...analytics.dailyTrend.map((d) => d.pageViews || 1), 20);
+              const heightPercent = Math.max(Math.round(((day.pageViews || 0) / maxView) * 100), 15);
+              return (
+                <div key={idx} className="flex flex-col items-center gap-2 group h-full justify-end">
+                  <span className="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    {day.pageViews || 0}
+                  </span>
+                  <div className="w-full bg-slate-800/80 rounded-lg overflow-hidden h-full max-h-16 flex items-end">
+                    <div
+                      className="w-full bg-gradient-to-t from-cyan-600 to-blue-500 rounded-lg group-hover:from-cyan-400 group-hover:to-blue-400 transition-all duration-500 shadow-sm shadow-cyan-500/20"
+                      style={{ height: `${heightPercent}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] sm:text-xs text-slate-400 font-medium truncate max-w-full">
+                    {typeof day.date === "string" ? day.date.slice(-5) : `D${idx + 1}`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Quick Action Hub */}

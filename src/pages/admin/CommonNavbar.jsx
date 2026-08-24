@@ -12,10 +12,13 @@ const CommonNavbar = ({ open, setOpen }) => {
     if (pathname === "/dashboard") return "Dashboard Overview";
     if (pathname.includes("all-project")) return "All Projects";
     if (pathname.includes("add-project")) return "Add New Project";
+    if (pathname.includes("skills")) return "Skills & Tech Stack CMS";
+    if (pathname.includes("experiences")) return "Career Experience Timeline";
     if (pathname.includes("all-blogs")) return "All Blogs";
     if (pathname.includes("add-blogs")) return "Create New Blog";
     if (pathname.includes("all-contacts")) return "Client Contacts";
     if (pathname.includes("contact-cms")) return "Contact CMS";
+    if (pathname.includes("resume")) return "Resume & CV Manager";
     return "Admin Workspace";
   };
 
