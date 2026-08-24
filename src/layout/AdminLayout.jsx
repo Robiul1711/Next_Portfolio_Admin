@@ -5,7 +5,7 @@ import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
 import { FaBlog } from "react-icons/fa6";
-import { FiFolderPlus, FiFileText, FiMail } from "react-icons/fi";
+import { FiFolderPlus, FiFileText, FiMail, FiBriefcase, FiLayers } from "react-icons/fi";
 
 const AdminLayout = () => {
   const [open, setOpen] = useState(false);
@@ -40,6 +40,22 @@ const AdminLayout = () => {
     },
     {
       id: 3,
+      icon: <MdDashboard size={20} />,
+      text: "Skills & Tech CMS",
+      path: "/dashboard/skills",
+      activePaths: ["/dashboard/skills"],
+      sublink: false,
+    },
+    {
+      id: 4,
+      icon: <FiBriefcase size={19} />,
+      text: "Experience Timeline",
+      path: "/dashboard/experiences",
+      activePaths: ["/dashboard/experiences"],
+      sublink: false,
+    },
+    {
+      id: 5,
       icon: <FaBlog size={18} />,
       text: "Blog Management",
       path: "/dashboard/all-blogs",
@@ -57,7 +73,7 @@ const AdminLayout = () => {
       ],
     },
     {
-      id: 4,
+      id: 6,
       icon: <RiContactsFill size={19} />,
       text: "Contact Management",
       path: "/dashboard/all-contacts",
@@ -73,6 +89,14 @@ const AdminLayout = () => {
           path: "/dashboard/contact-cms",
         },
       ],
+    },
+    {
+      id: 7,
+      icon: <FiFileText size={18} />,
+      text: "Resume / CV CMS",
+      path: "/dashboard/resume",
+      activePaths: ["/dashboard/resume"],
+      sublink: false,
     },
   ];
 

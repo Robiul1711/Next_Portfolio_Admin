@@ -11,7 +11,9 @@ import AllContacts from "@/pages/ContactList/AllContacts";
 import ContactCMS from "@/pages/ContactList/ContactCMS";
 import AddProjects from "@/pages/ProjectPage/AddProjects";
 import AllProject from "@/pages/ProjectPage/AllProject";
-
+import SkillsManagement from "@/pages/Skills/SkillsManagement";
+import ExperienceManagement from "@/pages/Experience/ExperienceManagement";
+import ResumeCMS from "@/pages/Resume/ResumeCMS";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -20,10 +22,6 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      // {
-      //   path: "/",
-      //   element: <Signup />,
-      // },
       {
         path: "/",
         element: <Login />,
@@ -36,7 +34,6 @@ const router = createBrowserRouter([
         path: "/forgot-password",
         element: <ForgotPassword />,
       },
-
     ],
   },
   // Admin routes
@@ -46,31 +43,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard",
-        element: <Dashboard />, 
+        element: <Dashboard />,
       },
       {
         path: "/dashboard/all-project",
-        element: <AllProject />, 
+        element: <AllProject />,
       },
       {
         path: "/dashboard/add-project",
-        element: <AddProjects />, 
+        element: <AddProjects />,
+      },
+      {
+        path: "/dashboard/skills",
+        element: <SkillsManagement />,
+      },
+      {
+        path: "/dashboard/experiences",
+        element: <ExperienceManagement />,
       },
       {
         path: "/dashboard/all-contacts",
-        element: <AllContacts />, 
+        element: <AllContacts />,
       },
       {
         path: "/dashboard/contact-cms",
-        element: <ContactCMS />, 
+        element: <ContactCMS />,
+      },
+      {
+        path: "/dashboard/resume",
+        element: <ResumeCMS />,
       },
       {
         path: "/dashboard/add-blogs",
-        element: <PostBlogPrompt />, 
+        element: <PostBlogPrompt />,
       },
       {
         path: "/dashboard/all-blogs",
-        element: <ShowAllBlog />, 
+        element: <ShowAllBlog />,
       },
     ],
   },
