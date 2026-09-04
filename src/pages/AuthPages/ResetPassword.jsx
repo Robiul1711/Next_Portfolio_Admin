@@ -84,22 +84,24 @@ export default function ResetPassword() {
         <div className="relative rounded-3xl p-[1px] bg-gradient-to-b from-slate-700/80 via-slate-800/40 to-slate-800/20 shadow-2xl shadow-black/80">
           <div className="w-full bg-[#0D121F]/90 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 border border-slate-800/50">
             {/* Header */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center mb-4">
-                <div className="p-3 rounded-2xl bg-gradient-to-tr from-cyan-500/10 via-blue-500/10 to-indigo-500/20 border border-cyan-500/20 shadow-lg shadow-cyan-500/10">
-                  <img src={logo} alt="Logo" className="w-10 h-10 object-contain drop-shadow" />
+            <div className="flex flex-col items-center text-center mb-8">
+              {/* Logo Badge Container */}
+              <div className="flex items-center justify-center mb-3.5">
+                <div className="px-6 py-3 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-xl shadow-cyan-500/5 flex items-center justify-center hover:border-slate-700 transition-colors">
+                  <img src={logo} alt="Ashiq Logo" className="h-7 sm:h-8 w-auto object-contain drop-shadow" />
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-2">
+              {/* Security Update Tag */}
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[11px] font-semibold uppercase tracking-wider mb-3">
                 <FiShield className="text-cyan-400 text-xs" />
                 <span>Security Update</span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-1">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
                 Reset Password
               </h1>
-              <p className="text-slate-400 text-xs sm:text-sm mt-2">
+              <p className="text-slate-400 text-xs sm:text-sm mt-1.5">
                 Create a strong new password for your account
               </p>
             </div>
