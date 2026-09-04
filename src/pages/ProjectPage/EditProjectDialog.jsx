@@ -24,10 +24,10 @@ import { FiEdit } from "react-icons/fi";
 import { useApiMutation } from "@/hooks/postApi";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function EditProjectDialog({ project }) {
-  const [open, setOpen] = useState(false);
-  const [preview, setPreview] = useState(project.image || null);
-  const [technologies, setTechnologies] = useState(project.technologies || []);
+export default function EditProjectDialog({ project, onClose, onSuccess }) {
+  const [open, setOpen] = useState(true);
+  const [preview, setPreview] = useState(project?.image || null);
+  const [technologies, setTechnologies] = useState(project?.technologies || []);
   const [techInput, setTechInput] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
@@ -41,26 +41,37 @@ export default function EditProjectDialog({ project }) {
     formState: { errors } 
   } = useForm({
     defaultValues: {
-      title: project.title,
-      description: project.description,
-      stack: project.stack,
-      github: project.github || "",
-      live: project.live || "",
+      title: project?.title || "",
+      description: project?.description || "",
+      stack: project?.stack || "",
+      github: project?.github || "",
+      live: project?.live || "",
     },
   });
 
   // Initialize technologies
   useEffect(() => {
-    if (project.technologies) {
-      setTechnologies(Array.isArray(project.technologies) 
-        ? project.technologies 
-        : project.technologies.split(",").map(t => t.trim()).filter(t => t)
-      );
+    if (project) {
+      if (project.technologies) {
+        setTechnologies(Array.isArray(project.technologies) 
+          ? project.technologies 
+          : project.technologies.split(",").map(t => t.trim()).filter(t => t)
+        );
+      } else {
+        setTechnologies([]);
+      }
+      setPreview(project.image || null);
+      setImageFile(null);
+      reset({
+        title: project.title || "",
+        description: project.description || "",
+        stack: project.stack || "",
+        github: project.github || "",
+        live: project.live || "",
+      });
+      setOpen(true);
     }
-    if (project.image) {
-      setPreview(project.image);
-    }
-  }, [project, open]);
+  }, [project, reset]);
 
   // UPDATE MUTATION
   const { mutate, isPending } = useApiMutation({
@@ -90,18 +101,24 @@ export default function EditProjectDialog({ project }) {
       },
       {
         onSuccess: (res) => {
-          // Update local state with response data
-          const updatedProject = res.updatedProject || res.data;
-          if (updatedProject) {
-            setTechnologies(updatedProject.technologies || []);
-            if (updatedProject.image) setPreview(updatedProject.image);
-          }
-          
           setOpen(false);
           queryClient.invalidateQueries(["all-projects"]);
+          queryClient.invalidateQueries(["dashboard-stats"]);
+          if (onSuccess) {
+            onSuccess(res);
+          } else if (onClose) {
+            onClose();
+          }
         },
       }
     );
+  };
+
+  const handleOpenChange = (isOpen) => {
+    setOpen(isOpen);
+    if (!isOpen && onClose) {
+      onClose();
+    }
   };
 
   // Handle image upload
@@ -143,16 +160,9 @@ export default function EditProjectDialog({ project }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* Trigger Button */}
-      <DialogTrigger asChild>
-        <button className="p-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105">
-          <FiEdit size={18} className="text-white" />
-        </button>
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       {/* Modal */}
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900/95 backdrop-blur-lg border border-gray-800 rounded-2xl">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900/95 backdrop-blur-lg border border-gray-800 rounded-2xl text-white">
         <DialogHeader className="pb-4 border-b border-gray-800">
           <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
             <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
@@ -193,8 +203,7 @@ export default function EditProjectDialog({ project }) {
                   className="w-full p-3 rounded-xl bg-gray-800/50 border border-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                 >
               <option value="">Select stack</option>
-<option value="">Select stack</option>
-<option value="MERN">MERN</option>
+              <option value="MERN">MERN</option>
 <option value="NextJS">NextJS</option>
 <option value="React JS">React JS</option>
 <option value="NodeJS">NodeJS</option>
