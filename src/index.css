@@ -221,6 +221,12 @@
   background: var(--color-bg-custom);
 }
 
-button{
+button {
   cursor: pointer;
 }
+
+body {
+  background-color: #080b11;
+  color: #f8fafc;
+  font-family: var(--font-poppins);
+}
